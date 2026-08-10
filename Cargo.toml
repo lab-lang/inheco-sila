@@ -1,0 +1,22 @@
+[package]
+name = "inheco-sila"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+license = "Apache-2.0"
+repository = "https://github.com/lab-lang/inheco-sila"
+description = "Typed drivers for Inheco's SiLA-controlled instruments, first the ODTC thermocycler."
+keywords = ["inheco", "odtc", "thermocycler", "lab-automation", "sila"]
+categories = ["science", "hardware-support"]
+
+[dependencies]
+quick-xml = "0.41.0"
+thiserror = "2"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+dbg_macro = "deny"
+todo = "deny"
+unimplemented = "deny"
