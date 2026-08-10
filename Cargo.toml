@@ -12,6 +12,9 @@ categories = ["science", "hardware-support"]
 [dependencies]
 quick-xml = "0.41.0"
 thiserror = "2"
+# The ODTC speaks plain HTTP with no TLS, so the default rustls stack and
+# gzip support stay out of the build.
+ureq = { version = "3.3.0", default-features = false }
 
 [lints.rust]
 unsafe_code = "forbid"

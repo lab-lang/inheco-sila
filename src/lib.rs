@@ -8,6 +8,11 @@
 //!   rendering the vendor's thermal-profile XML dialect. Timestamps and
 //!   method names are caller inputs, so every document renders to the
 //!   same bytes and is testable as a string with no hardware.
+//! - **Transport** ([`transport`]) — a blocking
+//!   [`transport::SoapTransport`] trait carrying both directions of the
+//!   asymmetric protocol: `ureq` for the client-to-device POSTs and a
+//!   hand-rolled HTTP/1.1 listener thread for the device-to-client event
+//!   POSTs, plus a scripted mock for tests.
 //!
 //! The protocol knowledge here derives from PyLabRobot's ODTC backend
 //! and SiLA interface (MIT licensed) and from the Inheco ODTC user
@@ -17,6 +22,7 @@
 
 pub mod methodset;
 pub mod soap;
+pub mod transport;
 
 pub use methodset::{
     BLOCK_MAX_CELSIUS, BLOCK_MIN_CELSIUS, LID_MAX_CELSIUS, LID_MIN_CELSIUS, MAX_SLOPE_C_PER_S,
@@ -26,3 +32,4 @@ pub use soap::{
     Command, DataEvent, DataSeries, DeviceState, IncomingEvent, ResponseEvent, SoapError,
     StatusEvent, SyncResponse,
 };
+pub use transport::{HttpSoapTransport, MockSoapTransport, SoapTransport, TransportError};
