@@ -1,5 +1,8 @@
-//! Typed protocol building blocks for Inheco's SiLA-controlled
-//! instruments: SiLA 1.x SOAP over plain HTTP.
+//! Typed drivers for Inheco's SiLA-controlled instruments — today the
+//! ODTC (On-Deck Thermal Cycler) — speaking SiLA 1.x SOAP over plain
+//! HTTP.
+//!
+//! The crate is three cleanly separated layers:
 //!
 //! - **Protocol** ([`soap`], [`methodset`]) — pure, no I/O: SOAP 1.1
 //!   envelope encoding and decoding for the command vocabulary, the
@@ -13,6 +16,12 @@
 //!   asymmetric protocol: `ureq` for the client-to-device POSTs and a
 //!   hand-rolled HTTP/1.1 listener thread for the device-to-client event
 //!   POSTs, plus a scripted mock for tests.
+//! - **Session** ([`session`]) — an [`Odtc`] handle owning the
+//!   transport: the connect handshake, door control, method upload and
+//!   execution, temperature readout, and completion resolved by the
+//!   device's `ResponseEvent` callback with a `GetStatus` polling
+//!   fallback so a firewall never wedges a run. The device reports no
+//!   run progress, and nothing here pretends otherwise.
 //!
 //! The protocol knowledge here derives from PyLabRobot's ODTC backend
 //! and SiLA interface (MIT licensed) and from the Inheco ODTC user
@@ -21,12 +30,16 @@
 //! involved: control is HTTP and XML end to end.
 
 pub mod methodset;
+pub mod session;
 pub mod soap;
 pub mod transport;
 
 pub use methodset::{
     BLOCK_MAX_CELSIUS, BLOCK_MIN_CELSIUS, LID_MAX_CELSIUS, LID_MIN_CELSIUS, MAX_SLOPE_C_PER_S,
     MethodSetError, MethodSettings, ProgramStage, ProgramStep, ThermalProgram,
+};
+pub use session::{
+    ActualTemperatures, DeviceIdentification, MethodRun, Odtc, OdtcError, OdtcOptions, SensorValue,
 };
 pub use soap::{
     Command, DataEvent, DataSeries, DeviceState, IncomingEvent, ResponseEvent, SoapError,
